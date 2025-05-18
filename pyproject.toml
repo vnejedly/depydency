@@ -1,0 +1,12 @@
+[project]
+name = "di_container"
+version = "0.1.0"
+description = "Dependency Injection Container for Inversion of Control"
+readme = "README.md"
+requires-python = ">=3.7"
+license = { text = "MIT" }
+authors = [{ name = "Vladislav Nejedly", email = "vladislav.nejedly@gmail.com" }]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
