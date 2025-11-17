@@ -35,11 +35,15 @@ class AbcProvider(AbcProviderInterface, ABC):
             dependencies = {}
 
         instance_type = type(instance)
+        for dependency_name, dependency_type in instance_type.__annotations__.items():
+            inject = getattr(instance_type, dependency_name, None)
+            if isinstance(inject, Inject):
+                inject.set_dependency_id(dependency_type, dependency_name)
+                dependency_instance = self._container.get_dependency(inject)
 
-        for (dep_name, dep_type) in instance_type.__annotations__.items():
-            if isinstance(inject := getattr(instance_type, dep_name, None), Inject):
-                dependency_instance = self._container.get_dependency(inject, dep_type, dep_name)
-                setattr(instance, dep_name, dependencies.get(dep_name, dependency_instance))
+                setattr(instance, dependency_name, dependencies.get(
+                    dependency_name, dependency_instance
+                ))
 
     def _create_instance(self) -> Any:
         instance = self._creator(self)
@@ -48,4 +52,3 @@ class AbcProvider(AbcProviderInterface, ABC):
             raise BadTypeException(self._dependency_type, type_provided)
 
         return instance
-

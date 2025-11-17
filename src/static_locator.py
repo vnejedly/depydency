@@ -9,7 +9,7 @@ class StaticLocator:
 
     @classmethod
     def get_by_type[DependencyType](
-        cls, dependency_type: Type[DependencyType], 
+        cls, dependency_type: Type[DependencyType],
         unique_instance: bool = False,
         default_implementation: Type | None = None,
     ) -> DependencyType:
@@ -17,7 +17,8 @@ class StaticLocator:
         
     @classmethod
     def get_by_name(
-        cls, dependency_name: str, 
+        cls, dependency_name: str,
+        unique_instance: bool = False,
         default_value: Any = None,
     ) -> Any:
-        return cls.locator.get_by_name(dependency_name, default_value)
+        return cls.locator.get_by_name(dependency_name, unique_instance, default_value)

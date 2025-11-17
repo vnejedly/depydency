@@ -15,6 +15,7 @@ class AbcLocatorInterface(ABC):
     @abstractmethod
     def get_by_name(
         self, dependency_name: str, 
+        unique_instance: bool = False,
         default_value: Any = None,
     ) -> Any:
         pass

@@ -10,20 +10,19 @@ if TYPE_CHECKING:
 class Alias(AbcProviderInterface):
 
     _container: AbcContainer
-    _alias_class: Type
-    _target_class: Type
+    _alias_type: Type
+    _target_type: Type
 
     def __init__(self, alias_type: Type, target_type: Type):
-        self._alias_class = alias_type
-        self._target_class = target_type
+        self._alias_type = alias_type
+        self._target_type = target_type
 
     def provide(self, inject: Inject) -> Any:
-        return self._container.get_dependency(
-            inject=inject, dependency_type=self._target_class,
-        )
+        inject.set_dependency_id(dependency_type=self._target_type)
+        return self._container.get_dependency(inject)
 
     def get_dependency_type(self) -> Type:
-        return self._alias_class
+        return self._alias_type
 
     def set_container(self, container: AbcContainer):
         self._container = container

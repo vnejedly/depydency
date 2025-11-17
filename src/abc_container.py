@@ -10,11 +10,11 @@ from di_tree.inject import Inject, TypeInject, NameInject
 
 class AbcContainer(AbcLocatorInterface, ABC):
 
-    _providers_repr: Dict[str, AbcProviderInterface]
+    _providers_type: Dict[str, AbcProviderInterface]
     _providers_name: Dict[str, AbcProviderInterface]
 
     def __init__(self):
-        self._providers_repr = {}
+        self._providers_type = {}
         self._providers_name = {}
         self.setup()
 
@@ -23,8 +23,8 @@ class AbcContainer(AbcLocatorInterface, ABC):
         """Setup dependences in implementation"""
 
     def set_provider(self, provider: AbcProviderInterface):
-        dependency_repr = self._get_dependency_repr(provider.get_dependency_type())
-        self._providers_repr[dependency_repr] = provider
+        type_repr = self._get_type_repr(provider.get_dependency_type())
+        self._providers_type[type_repr] = provider
         provider.set_container(self)
 
     def set_named_provider(self, name: str, provider: AbcProviderInterface):
@@ -35,49 +35,44 @@ class AbcContainer(AbcLocatorInterface, ABC):
         unique_instance: bool = False,
         default_implementation: Type | None = None,
     ) -> DependencyType:
-        return self.get_dependency(
-            dependency_type=dependency_type,
-            inject=TypeInject(unique_instance, default_implementation),
-        )
+        inject = TypeInject(unique_instance, default_implementation)
+        inject.set_dependency_id(dependency_type=dependency_type)
+        return self.get_dependency(inject)
         
     def get_by_name(
         self, dependency_name: str,
-        default_value: Any = None,
+        unique_instance: bool = False,
+        default_value: Any = None
     ) -> Any:
-        return self.get_dependency(
-            dependency_name=dependency_name,
-            inject=NameInject(default_value)
-        )
+        inject = NameInject(unique_instance, default_value)
+        NameInject.set_dependency_id(dependency_name=dependency_name)
+        return self.get_dependency(inject)
 
-    def get_dependency(
-        self, inject: Inject,
-        dependency_type: Type = Any,
-        dependency_name: str | None = None,
-    ) -> Any:
+    def get_dependency(self, inject: Inject) -> Any:
         match inject.method:
             case Inject.Method.BY_TYPE:
-                dependency_repr = self._get_dependency_repr(dependency_type)
-                if dependency_repr not in self._providers_repr.keys():
-                    self.set_provider(AutoResolve(dependency_type))
+                type_repr = self._get_type_repr(inject.dependency_type)
+                if type_repr not in self._providers_type.keys():
+                    self.set_provider(AutoResolve(inject.dependency_type))
                 try:
-                    return self._providers_repr.get(dependency_repr).provide(inject)
+                    return self._providers_type.get(type_repr).provide(inject)
                 except TypeError:
                     default_implementation = inject.default_implementation
                     if default_implementation is None:
                         raise
-                    default_repr = self._get_dependency_repr(default_implementation)
-                    if default_repr not in self._providers_repr.keys():
+                    default_repr = self._get_type_repr(default_implementation)
+                    if default_repr not in self._providers_type.keys():
                         self.set_provider(AutoResolve(default_implementation))
-                    return self._providers_repr.get(default_repr).provide(inject)
+                    return self._providers_type.get(default_repr).provide(inject)
             case Inject.Method.BY_NAME:
-                if dependency_name not in self._providers_name.keys():
+                if inject.dependency_name not in self._providers_name.keys():
                     if inject.default_value is not None:
                         return inject.default_value
-                    raise BadNameException(dependency_name)
-                return self._providers_name.get(dependency_name).provide(inject)
+                    raise BadNameException(inject.dependency_name)
+                return self._providers_name.get(inject.dependency_name).provide(inject)
             
         raise ValueError(f"Unexpected inject method {inject.method}")
 
     @staticmethod
-    def _get_dependency_repr(service_class: Type) -> str:
-        return f"{service_class.__module__}.{service_class.__name__}"
+    def _get_type_repr(dependency_type: Type) -> str:
+        return f"{dependency_type.__module__}.{dependency_type.__name__}"

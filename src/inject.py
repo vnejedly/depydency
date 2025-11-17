@@ -9,16 +9,26 @@ class Inject(ABC):
         BY_NAME: str = 'by_name'
 
     method: Method
-
-    # InjectType.BY_TYPE:
     unique_instance: bool
+
+    # Method.BY_TYPE:
+    dependency_type: Type
     default_implementation: Type | None
 
-    # InjectType.BY_NAME:
+    # Method.BY_NAME:
+    dependency_name: str | None
     default_value: Any
 
     def __init__(self):
         raise Exception("Use TypeInject or NameInject")
+    
+    def set_dependency_id(
+        self, 
+        dependency_type: Type = Any, 
+        dependency_name: str | None = None,
+    ):
+        self.dependency_type = dependency_type
+        self.dependency_name = dependency_name
 
 
 class TypeInject(Inject):
@@ -35,7 +45,9 @@ class TypeInject(Inject):
 class NameInject(Inject):
     def __init__(
         self,
+        unique_instance: bool = False,
         default_value: Any = None,
     ):
         self.method = self.Method.BY_NAME
+        self.unique_instance = unique_instance
         self.default_value = default_value

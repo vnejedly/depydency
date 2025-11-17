@@ -14,6 +14,7 @@ class ExplicitValue(AbcProviderInterface):
         self._value = value
 
     def provide(self, inject: Inject) -> Any:
+        assert inject.unique_instance == False, "Can only inject the actual value"
         return self._value
 
     def get_dependency_type(self) -> Type:
