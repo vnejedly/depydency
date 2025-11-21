@@ -1,6 +1,6 @@
 from typing import Type, Any
-from di_tree.abc_locator_interface import AbcLocatorInterface
-from di_tree.inject import Inject
+from depydency.abc_locator_interface import AbcLocatorInterface
+from depydency.inject import Inject
 
 
 class StaticLocator:

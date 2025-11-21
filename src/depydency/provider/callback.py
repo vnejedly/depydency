@@ -1,5 +1,5 @@
-from di_tree.inject import Inject
-from di_tree.provider.abc_creator import AbcCreator
+from depydency.inject import Inject
+from depydency.provider.abc_creator import AbcCreator
 from typing import Type, Any, Callable
 
 CreatorCallable = Callable[[AbcCreator, Inject], Any]

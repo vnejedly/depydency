@@ -1,6 +1,6 @@
 from typing import Type, Any
-from di_tree.provider.abc_creator import AbcCreator
-from di_tree.inject import Inject
+from depydency.provider.abc_creator import AbcCreator
+from depydency.inject import Inject
 import importlib
 
 

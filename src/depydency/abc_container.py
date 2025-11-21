@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Type, Any
-from di_tree.abc_locator_interface import AbcLocatorInterface
-from di_tree.provider.abc_provider import AbcProvider
-from di_tree.provider.auto_resolve import AutoResolve
-from di_tree.exceptions.bad_name import BadNameException
-from di_tree.exceptions.abc_instance import AbcInstanceException
-from di_tree.inject import Inject, TypeInject, NameInject
+from depydency.abc_locator_interface import AbcLocatorInterface
+from depydency.provider.abc_provider import AbcProvider
+from depydency.provider.auto_resolve import AutoResolve
+from depydency.exceptions.bad_name import BadNameException
+from depydency.exceptions.abc_instance import AbcInstanceException
+from depydency.inject import Inject, TypeInject, NameInject
 
 
 class AbcContainer(AbcLocatorInterface, ABC):

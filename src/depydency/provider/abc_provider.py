@@ -1,10 +1,10 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, Type, TYPE_CHECKING
-from di_tree.inject import Inject
+from depydency.inject import Inject
 
 if TYPE_CHECKING:
-    from di_tree.abc_container import AbcContainer
+    from depydency.abc_container import AbcContainer
 
 
 class AbcProvider(ABC):

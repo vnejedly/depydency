@@ -1,6 +1,6 @@
 from typing import Any, Type, TYPE_CHECKING
-from di_tree.provider.abc_provider import AbcProvider
-from di_tree.inject import Inject
+from depydency.provider.abc_provider import AbcProvider
+from depydency.inject import Inject
 
 
 class Value(AbcProvider):

@@ -1,7 +1,7 @@
 from typing import Dict
-from di_tree.inject import Inject
-from di_tree.exceptions.bad_type import BadTypeException
-from di_tree.provider.abc_provider import AbcProvider
+from depydency.inject import Inject
+from depydency.exceptions.bad_type import BadTypeException
+from depydency.provider.abc_provider import AbcProvider
 from abc import ABC, abstractmethod
 
 from typing import Any, Type, Annotated, get_type_hints, get_origin, get_args
