@@ -34,13 +34,10 @@ class AbcProvider(AbcProviderInterface, ABC):
     def set_container(self, container: AbcContainer):
         self._container = container
 
-    def inject_dependencies(self, instance: Any, dependencies: Dict[str, Any] = None):
-        if dependencies is None:
-            dependencies = {}
-
+    def inject_dependencies(self, instance: Any, dependencies: Dict[str, Any] = {}):
         instance_type = type(instance)
         annotations = get_type_hints(instance_type, include_extras=True)
-
+        
         for dependency_name, annotation in annotations.items():
             if get_origin(annotation) == Annotated:
                 dependency_type, inject = get_args(annotation)
@@ -49,7 +46,10 @@ class AbcProvider(AbcProviderInterface, ABC):
                     dependency_instance = dependencies.get(dependency_name)
                     if not dependency_instance:
                         dependency_instance = self._container.get_dependency(inject)
-
+                    elif not isinstance(dependency_instance, inject.dependency_type):
+                        raise BadTypeException(
+                            inject.dependency_type, type(dependency_instance)
+                        )
                     setattr(instance, dependency_name, dependency_instance)
 
     def _create_instance(self, inject: Inject) -> Any:
