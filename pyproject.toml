@@ -1,12 +1,12 @@
 [project]
-name = "di_container"
-version = "0.1.0"
+name = "depydency"
+version = "1.0.3"
 description = "Dependency Injection Container for Inversion of Control"
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
-license = { text = "MIT" }
 authors = [{ name = "Vladislav Nejedly", email = "vladislav.nejedly@gmail.com" }]
 
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+[project.urls]
+Homepage = "https://github.com/vnejedly/depydency"
+Issues = "https://github.com/vnejedly/depydency"
